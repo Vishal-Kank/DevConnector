@@ -4,6 +4,8 @@
   "description": "Social network for developers",
   "main": "server.js",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "node server",
     "server": "nodemon server"
   },
@@ -14,6 +16,7 @@
     "config": "^3.2.3",
     "express": "^4.17.1",
     "express-validator": "^6.2.0",
+    "gh-pages": "^2.1.1",
     "gravatar": "^1.8.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.5",
