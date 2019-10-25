@@ -7,7 +7,7 @@ const User = require('../../models/User');
 const Profile = require('../../models/Profile');
 
 // @rout GET :   api/profile/me(checking ift this profile exists)
-// @disc     :   get current loggrd users profile
+// @desc     :   get current loggrd users profile
 // @access   :   Private(so only user can see)
 
 router.get('/me', auth, async (req, res) => {
@@ -28,7 +28,7 @@ router.get('/me', auth, async (req, res) => {
 
 
 // @rout GET :   api/profile/(coz here we are either making or updating profile) 
-// @disc     :   Post updates/create to current logged in users profile
+// @desc     :   Post updates/create to current logged in users profile
 // @access   :   Private(so only user can see)
 
 router.post('/',
@@ -94,9 +94,49 @@ router.post('/',
 
     });
 
+//----------------------------------------------------------------------------------------------------------
 
 
+// @rout GET :   api/profile/
+//               (display all user profiles to show available developers)
+// @desc     :   Get only available users profile
+// @access   :   Public(so we can see developers)
 
+router.get('/', async (req, res) => {
+    try {
+        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+        res.json(profiles);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).send('Server Error!');
+
+    }
+});
+
+
+//----------------------------------------------------------------------------------------------------------
+
+
+// @rout GET :   api/profile/user/user:id
+//               (display all user profiles to show available developers)
+// @desc     :   Get users profile by their user id.
+// @access   :   Public
+
+router.get('/user/:user_id', async (req, res) => {
+    try {
+        const profile = await Profile.findOne({ user: req.params.user_id }).populate('user', ['name', 'avatar']);
+        if (!profile) {
+            return res.status(400).json({ 'msg': 'Profile not found!' });
+        }
+        return res.json(profile);
+    } catch (error) {
+        if (error.kind == 'ObjectId') { // if a wrong user id object is detected...
+            return res.status(400).json({ 'msg': 'Profile not found!' });
+        }
+        console.error(error.message);
+        res.status(500).send('Server Error!');
+    }
+});
 
 //-----------------------------------------------------------------------------------------------------------
 module.exports = router;
