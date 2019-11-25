@@ -192,7 +192,7 @@ router.put('/experience', [auth, [
 
 //----------------------------------------------------------------------------------------------------------
 
-// @rout     :   Delete api/profile/experience
+// @route     :   Delete api/profile/experience
 //               (remove experience to user profile)
 // @desc     :   remove experience.
 // @access   :   Private
@@ -208,8 +208,39 @@ router.delete('/experience/:exp_id', auth, async (req, res) => {
         console.log(err.message);
         res.status(500).send('Server Error!');
     }
-})
+});
 
+//----------------------------------------------------------------------------------------------------------
+
+// @route     :   PUT api/profile/education
+//               (add education to user profile)
+// @desc     :   Add education.
+// @access   :   Private
+
+router.put('/education',
+    [auth, [
+        check('school', 'School name required.').not().isEmpty(),
+        check('fieldofstudy', 'field of study required').not().isEmpty(),
+        check('from', 'from date is required.').not().isEmpty()
+    ]],
+    async (req, res) => {
+        errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
+        const { school, degree, fieldofstudy, from, to, description, current } = req.body;
+        const newEdu = { school, degree, fieldofstudy, from, to, description, current };
+        try {
+            const profile = await Profile.findOne({ user: req.user.id });
+            profile.education.unshift(newEdu);
+            await profile.save();
+            res.json(profile);
+        }
+        catch (err) {
+            console.log(err.message);
+            res.status(500).send('Server Error!');
+        }
+    });
 
 //-----------------------------------------------------------------------------------------------------------
 module.exports = router;
