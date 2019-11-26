@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../../middleware/auth');
 const { check, validationResult } = require('express-validator');
+const request = require('request');
+const config = require('config');
 
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
@@ -244,7 +246,7 @@ router.put('/education',
 
 //----------------------------------------------------------------------------------------------------------
 
-// @route     :   Delete api/profile/education
+// @route     :   Delete api/profile/education/:edu_id
 //               (remove education to user profile)
 // @desc     :   remove education.
 // @access   :   Private
@@ -261,6 +263,38 @@ router.delete('/education/:edu_id', auth, async (req, res) => {
     }
 });
 
+
+//----------------------------------------------------------------------------------------------------------
+
+// @route     :   GET api/profile/github/:username
+//               (get github of user profile)
+// @desc     :   Get users repos from Github.
+// @access   :   Public
+
+router.get('/github/:username', (req, res) => {
+    try {
+        const options = {
+            uri: `https://api.github.com/users/${req.params.username}/repos?per_page=5
+                    &sort=created:asc
+                    &client_id=${config.get('githubClientId')}
+                    &client_secret=${config.get('githubSecret')}`,
+
+            method: 'GET',
+
+            headers: { 'user-agent': 'node.js' }
+        };
+        request(options, (error, response, body) => {
+            if (error) console.log(error);
+            if (response.statusCode !== 200) {
+                res.status(404).json({ msg: 'No Github profile found.' })
+            }
+            res.json(JSON.parse(body));
+        })
+    } catch (err) {
+        console.log(err.message);
+        res.status(500).send('Server Error!');
+    }
+});
 
 //-----------------------------------------------------------------------------------------------------------
 module.exports = router;
