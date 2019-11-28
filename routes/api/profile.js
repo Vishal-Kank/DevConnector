@@ -226,7 +226,7 @@ router.put('/education',
         check('from', 'from date is required.').not().isEmpty()
     ]],
     async (req, res) => {
-        errors = validationResult(req);
+        const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ errors: errors.array() });
         }
