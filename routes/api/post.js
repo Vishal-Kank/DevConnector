@@ -39,7 +39,7 @@ router.post('/',
 
             const post = await newPost.save();
 
-            return res.status(200).json(profile);
+            return res.status(200).json(post);
         } catch (err) {
             console.log(err.message);
             res.status(500).send('Server Error!');
@@ -68,22 +68,23 @@ router.get('/:id', auth, async (req, res) => {
 
 //--------------------------------------------------------------------------------------
 
-// @rout     :   Delete api/posts
-// @desc     :   Delete post by id
+// @rout     :   GET api/posts
+// @desc     :   Get post by id
 // @access   :   Private
 
-router.delete('/:id', auth, async (req, res) => {
+router.get('/', auth, async (req, res) => {
     try {
-        const post = await Post.findById(req.params.id).sort({ date: -1 });
-        if (!post) return res.status(404).json({ msg: 'Post not found!' });
-        if (post.user.id.toString() !== req.params.id)//i.e the user that made this request is not the actual author so he cannot delete this post
-            return res.status(401).json({ msg: 'Unauthorized access!' });
-        await post.remove();
+        const post = await Post.find().sort({ date: -1 });
+        //if (!post) return res.status(404).json({ msg: 'Post not found!' });
+        return res.json(post);
     } catch (err) {
         console.error(err.message);
-        if (err.kind === 'ObjectId') return res.status(404).json({ msg: 'Post not found!' });
+        //if (err.kind === 'ObjectId') return res.status(404).json({ msg: 'Post not found!' });
         return res.status(500).send('Server Error!');
     }
 });
+
+
+
 
 module.exports = router;
