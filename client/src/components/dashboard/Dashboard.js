@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import { getCurrentProfile } from '../../actions/profile';
 import Spinner from '../layout/Spinner';
 
+import DashboardAction from './DashboardAction';
+
 const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { user } }) => {
 
     useEffect(() => {
@@ -23,7 +25,11 @@ const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { u
                 </p>
                 {
                     profile !== null ?
-                        (<Fragment>has</Fragment>) :
+                        (
+                            <Fragment>
+                                <DashboardAction />
+                            </Fragment>
+                        ) :
                         (
                             <Fragment>
                                 <p>You have not yet steup a profile, please do add some info...</p>
