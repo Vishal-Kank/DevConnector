@@ -7,6 +7,7 @@ import { getCurrentProfile } from '../../actions/profile';
 import Spinner from '../layout/Spinner';
 
 import DashboardAction from './DashboardAction';
+import Experience from './Experience';
 
 const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { user } }) => {
 
@@ -28,6 +29,7 @@ const Dashboard = ({ getCurrentProfile, profile: { profile, loading }, auth: { u
                         (
                             <Fragment>
                                 <DashboardAction />
+                                <Experience experience={profile.experience} />
                             </Fragment>
                         ) :
                         (
