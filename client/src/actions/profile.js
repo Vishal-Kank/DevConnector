@@ -126,7 +126,7 @@ export const deleteExperience = exp_id => async dispatch => {
     }
 };
 //Delete Education 
-export const deleteEducation = (edu_id) => async dispatch => {
+export const deleteEducation = edu_id => async dispatch => {
     try {
         const res = await axios.delete(`/api/profile/education/${edu_id}`);
         dispatch({
@@ -148,7 +148,7 @@ export const deleteAccount = () => async dispatch => {
             const res = await axios.delete(`/api/profile`);
             dispatch({ type: CLEAR_PROFILE });
             dispatch({ type: DELETE_ACCOUNT });
-            dispatch(setAlert('Your account has been permanently been deleted'));
+            dispatch(setAlert('Your account has been permanently deleted'));
         } catch (err) {
             dispatch({
                 type: PROFILE_ERROR,

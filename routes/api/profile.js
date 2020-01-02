@@ -7,6 +7,7 @@ const config = require('config');
 
 const User = require('../../models/User');
 const Profile = require('../../models/Profile');
+const Post = require('../../models/Post');
 
 // @rout GET :   api/profile/me(checking ift this profile exists)
 // @desc     :   get current loggrd users profile
@@ -150,6 +151,7 @@ router.get('/user/:user_id', async (req, res) => {
 // @access   :   Private
 router.delete('/', auth, async (req, res) => {
     try {
+        await Post.deleteMany({ user: req.user.id }); // Delete all posts of this account
         await Profile.findOneAndRemove({ user: req.user.id });// Profile removed
         await User.findOneAndRemove({ _id: req.user.id });//User removed
         res.json({ msg: 'User removed!' });
