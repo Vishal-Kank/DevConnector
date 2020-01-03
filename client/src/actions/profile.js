@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { setAlert } from './alert';
-import { GET_PROFILE, PROFILE_ERROR, UPDATE_PROFILE, CLEAR_PROFILE, DELETE_ACCOUNT } from './types';
-//import setAuthToken from '../utils/setAuthToken';
+import { GET_PROFILE, GET_PROFILES, PROFILE_ERROR, UPDATE_PROFILE, CLEAR_PROFILE, DELETE_ACCOUNT } from './types';
 
+//Get profile
 export const getCurrentProfile = () => async dispatch => {
     try {
         const res = await axios.get('/api/profile/me');
 
         dispatch({
-            type: GET_PROFILE,
+            type: GET_PROFILES,
             payload: res.data
         });
     } catch (err) {
@@ -18,6 +18,24 @@ export const getCurrentProfile = () => async dispatch => {
         });
     }
 }
+
+//Get all profiles
+export const getAllProfiles = () => async dispatch => {
+    dispatch({ type: CLEAR_PROFILE })
+    try {
+        const res = await axios.get('api/profile');
+        dispatch({
+            type: GET_PROFILE,
+            payload: res.data
+        });
+    } catch (err) {
+        dispatch({
+            type: PROFILE_ERROR,
+            payload: { msg: err.response.statusText, status: err.response.status }
+        })
+    }
+}
+
 //Create or update profile
 export const createProfile = (formData, history, edit = false) => async dispatch => {
     try {
@@ -111,7 +129,6 @@ export const addEducation = (formData, history) => async dispatch => {
 //Delete Experience 
 export const deleteExperience = exp_id => async dispatch => {
     try {
-        console.log('delete experience action triggered.....');
         const res = await axios.delete(`/api/profile/experience/${exp_id}`);
         dispatch({
             type: UPDATE_PROFILE,
