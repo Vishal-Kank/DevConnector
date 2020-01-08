@@ -8,7 +8,7 @@ import Spinner from '../layout/Spinner';
 import ProfileItem from './ProfileItem';
 
 const Profiles = ({ getProfiles, profile: { profiles, loading } }) => {
-    useEffect(() => { getProfiles() }, []);
+    useEffect(() => { getProfiles() }, [getProfiles]);
     return (
         <Fragment>
             {

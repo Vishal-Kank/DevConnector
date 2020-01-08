@@ -25,7 +25,7 @@ const ProfileItem = ({ profile: {
             </ul>
         </div>
     )
-}
+};
 
 ProfileItem.propTypes = {
     profile: PropTypes.object.isRequired,

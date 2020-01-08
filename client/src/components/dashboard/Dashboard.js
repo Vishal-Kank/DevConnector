@@ -14,7 +14,7 @@ const Dashboard = ({ getCurrentProfile, deleteAccount, profile: { profile, loadi
 
     useEffect(() => {
         getCurrentProfile()
-    }, []);
+    }, [getCurrentProfile]);
 
     return loading && profile === null ?
         (<Spinner />) :
